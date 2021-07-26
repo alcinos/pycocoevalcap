@@ -8,13 +8,14 @@ from .spice.spice import Spice
 
 
 class COCOEvalCap:
-    def __init__(self, coco, cocoRes):
+    def __init__(self, coco, cocoRes, cache_dir=None):
         self.evalImgs = []
         self.eval = {}
         self.imgToEval = {}
         self.coco = coco
         self.cocoRes = cocoRes
         self.params = {'image_id': coco.getImgIds()}
+        self.cache_dir = cache_dir
 
     def evaluate(self):
         imgIds = self.params['image_id']
@@ -29,7 +30,7 @@ class COCOEvalCap:
         # Set up scorers
         # =================================================
         print('tokenization...')
-        tokenizer = PTBTokenizer()
+        tokenizer = PTBTokenizer(cache_dir=self.cache_dir)
         gts  = tokenizer.tokenize(gts)
         res = tokenizer.tokenize(res)
 
@@ -42,7 +43,7 @@ class COCOEvalCap:
             (Meteor(),"METEOR"),
             (Rouge(), "ROUGE_L"),
             (Cider(), "CIDEr"),
-            (Spice(), "SPICE")
+            (Spice(cache_dir=self.cache_dir), "SPICE")
         ]
 
         # =================================================

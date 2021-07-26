@@ -20,8 +20,9 @@ class Spice:
     Main Class to compute the SPICE metric 
     """
 
-    def __init__(self):
+    def __init__(self, cache_dir=None):
         get_stanford_models()
+        self.cache_dir = cache_dir
 
     def float_convert(self, obj):
         try:
@@ -51,7 +52,7 @@ class Spice:
               "refs" : ref
             })
 
-        cwd = os.path.dirname(os.path.abspath(__file__))
+        cwd = os.path.dirname(os.path.abspath(__file__)) if self.cache_dir is None else self.cache_dir
         temp_dir=os.path.join(cwd, TEMP_DIR)
         if not os.path.exists(temp_dir):
           os.makedirs(temp_dir)
