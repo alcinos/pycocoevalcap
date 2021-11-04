@@ -8,7 +8,7 @@ from .spice.spice import Spice
 
 
 class COCOEvalCap:
-    def __init__(self, coco, cocoRes, cache_dir=None):
+    def __init__(self, coco, cocoRes, cache_dir=None, disable_spice=False):
         self.evalImgs = []
         self.eval = {}
         self.imgToEval = {}
@@ -16,6 +16,7 @@ class COCOEvalCap:
         self.cocoRes = cocoRes
         self.params = {'image_id': coco.getImgIds()}
         self.cache_dir = cache_dir
+        self.disable_spice = disable_spice
 
     def evaluate(self):
         imgIds = self.params['image_id']
@@ -42,9 +43,12 @@ class COCOEvalCap:
             (Bleu(4), ["Bleu_1", "Bleu_2", "Bleu_3", "Bleu_4"]),
             (Meteor(),"METEOR"),
             (Rouge(), "ROUGE_L"),
-            (Cider(), "CIDEr"),
-            (Spice(cache_dir=self.cache_dir), "SPICE")
+            (Cider(), "CIDEr")
         ]
+        if not self.disable_spice:
+            scorers += [
+                (Spice(cache_dir=self.cache_dir), "SPICE")
+            ]
 
         # =================================================
         # Compute scores
