@@ -197,6 +197,10 @@ class CiderScorer(object):
         return np.mean(np.array(score)), np.array(score)
 
     def compute_score_one_img(self, refs, test_caption):
+
+        refs = cook_refs(refs)
+        test_caption = cook_test(test_caption)
+
         # compute vector for test captions
         vec, norm, length = self._counts2vec(test_caption)
         # compute vector for ref captions
